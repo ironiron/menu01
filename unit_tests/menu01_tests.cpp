@@ -5,13 +5,19 @@
  *      Author: Rafał
  */
 
-
-#define CATCH_CONFIG_NO_CPP11_TO_STRING
-#define CATCH_CONFIG_MAIN
-#include "catch.hpp"
+#include <iostream>
 #include <string>
 #include <array>
-#include <iostream>
+
+//#define CATCH_CONFIG_NO_CPP11_TO_STRING
+//#define CATCH_CONFIG_MAIN
+//#include "catch.hpp"
+
+
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#include "doctest.h"
+
+
 
 
 template<auto M>
@@ -29,13 +35,64 @@ struct menu_list1
         std::cout << "aaaaaaa =" << items[0] << "  ads " << items[1]
                 << std::endl;
     }
-//    const std::array<int,(sizeof...(nodes))> items;
 //    item* parent = nullptr;
     //const std::array<item,sizeof(nodes)> items={nodes...};
     const std::array<std::string, (M)> items;
-
     const std::string name;
 };
+
+template <class T>
+class Menu01
+{
+public:
+    Menu01(T root_page) : list(root_page)
+    {
+        current_index=0;
+    }
+    virtual ~Menu01(){}
+    void MoveDown(void)
+    {
+        current_index++;
+    }
+    std::string CurrentItemStr(void)
+    {
+        return list.items[current_index];
+    }
+    unsigned int  CurrentItemInd(void)
+    {
+        return current_index;
+    }
+
+private:
+    T list;
+    unsigned int current_index=0;
+};
+
+TEST_CASE( "After initialization callback should be called with index of active item")
+{
+    menu_list1 main_page=menu_list1({"item1","second item"});
+    Menu01 menu=Menu01(main_page);
+    CHECK(menu.CurrentItemStr()==std::string("item1"));
+    CHECK(menu.CurrentItemInd()==0);
+}
+
+TEST_CASE( "Moves down the list")
+{
+    menu_list1 main_page=menu_list1({"item1","second item"});
+    Menu01 menu=Menu01(main_page);
+    menu.MoveDown();
+    CHECK(menu.CurrentItemStr()==std::string("second item"));
+    CHECK(menu.CurrentItemInd()==1);
+}
+
+
+
+//int main()
+//{
+//    menu_list1 main_page=menu_list1({"item1","second item"});
+//    Menu01 menu=Menu01(main_page);
+//    return 0;
+//}
 
 //template<unsigned int size> void Create_List()
 //{
@@ -61,31 +118,31 @@ struct menu_list1
 ////    testing::menu01::index=index;
 ////}
 
-TEST_CASE( "After initialization callback should be called with index of active item")
-{
-//    menu.item["main"]["sublist settings"].setCalback(foo);
-//    Menu01::Create_Lis t<5>={"test1","t2","aaa","i4","5"};
-//    Menu01 menu(menu_list);
-//    Create_List<5> base={"i1","i2","i3","i4","i5"};
-//    Menu01 menu(menu_list);
-
-//    Create_List<base,nullptr,nullptr> up1={"gotobase1","hahah","eh"};
-
-//    menu.Register_Callback();
-
-//    std::string e="gasfd";
-//    std::string e2="dsagasfd";
-//    const std::array<std::string,2> a={"dada","dasd"};
-//    menu_list("adad","das","ehh");//function initialization
-//    menu_list eh={45,55,21};//struct initialization
-//    menu_list eh={e,e2};//struct initialization
-//    menu_list eh={";aa;",";bb;"};//struct initialization
-
-    menu_list1 eh=menu_list1({"1111111","2222222"});
-
-////    menu_list(134,1,5);
-////    std::cout<<"aaaaaaa"<<lala.items[0]<<std::endl;
-//    std::cout<<" sds "<<a[0]<<std::endl;
-
-//  REQUIRE(testing::menu01::index==3);
-}
+//TEST_CASE( "After initialization callback should be called with index of active item")
+//{
+////    menu.item["main"]["sublist settings"].setCalback(foo);
+////    Menu01::Create_Lis t<5>={"test1","t2","aaa","i4","5"};
+////    Menu01 menu(menu_list);
+////    Create_List<5> base={"i1","i2","i3","i4","i5"};
+////    Menu01 menu(menu_list);
+//
+////    Create_List<base,nullptr,nullptr> up1={"gotobase1","hahah","eh"};
+//
+////    menu.Register_Callback();
+//
+////    std::string e="gasfd";
+////    std::string e2="dsagasfd";
+////    const std::array<std::string,2> a={"dada","dasd"};
+////    menu_list("adad","das","ehh");//function initialization
+////    menu_list eh={45,55,21};//struct initialization
+////    menu_list eh={e,e2};//struct initialization
+////    menu_list eh={";aa;",";bb;"};//struct initialization
+//
+//    menu_list1 eh=menu_list1({"1111111","2222222"});
+//
+//////    menu_list(134,1,5);
+//////    std::cout<<"aaaaaaa"<<lala.items[0]<<std::endl;
+////    std::cout<<" sds "<<a[0]<<std::endl;
+//
+////  REQUIRE(testing::menu01::index==3);
+//}

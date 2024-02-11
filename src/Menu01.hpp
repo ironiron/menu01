@@ -8,14 +8,14 @@
 #ifndef MENU01_HPP_
 #define MENU01_HPP_
 
-class Menu01
-{
-public:
-    Menu01();
-    virtual ~Menu01();
-
-
-
-};
+//class Menu01
+//{
+//public:
+//    Menu01();
+//    virtual ~Menu01();
+//
+//
+//
+//};
 
 #endif /* MENU01_HPP_ */
