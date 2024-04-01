@@ -1,4 +1,5 @@
 Debug/
+_build/
 Run_with_minGW/
 Debug_with_MinGW GCC/
 Debug_with_Cygwin GCC/
