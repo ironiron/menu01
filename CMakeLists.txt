@@ -6,7 +6,7 @@ set( CMAKE_CXX_COMPILER "C:/MinGW/bin/g++.exe")
 
 #set(CMAKE_CXX_STANDARD 20)
 #set(CMAKE_CXX_STANDARD_REQUIRED On)
-set (CMAKE_CXX_FLAGS "-std=gnu++20 -Wall -O3")
+set (CMAKE_CXX_FLAGS "-std=gnu++20 -Wall -Wsign-conversion -O3")
 #SET(CMAKE_CXX_FLAGS  "-Wall -Werror --version")
 
 find_package(Catch2 3 REQUIRED)
