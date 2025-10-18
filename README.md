@@ -8,3 +8,4 @@ Compile with C++20.
 
 unit_tests folder contains Catch2 tests. Cmake is only for Catch2 for now. 
 
+For how to use this see tests for simple example.

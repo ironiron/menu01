@@ -5,7 +5,8 @@
  *      Author: Rafał
  */
 
-#include <catch2/catch_test_macros.hpp>
+//#include <catch2/catch_test_macros.hpp> // catch2 v3
+#include <catch.hpp> // use this for single header catch2
 #include <type_traits>
 #include <typeinfo>
 #include <functional>
@@ -171,7 +172,7 @@ TEST_CASE( "When moving/stepping on Item perform callback funtion")
     Menu01 menu = Menu01(&main_page);
 
     unsigned int _in_clb_test = 0;
-    auto _test_calback = [&](unsigned int i)
+    auto _test_calback = [&](unsigned int i) noexcept
     {
         _in_clb_test = i;
     };
@@ -196,6 +197,43 @@ TEST_CASE( "When moving/stepping on Item perform callback funtion")
     CHECK(_in_clb_test== 1);
 }
 
+TEST_CASE( "Current list can be accessed")
+{
+    Menu01_base::menu_list main_page=Menu01_base::menu_list("main page",{"item1","second item", "3rd"});
+    Menu01_base::menu_list subpage=Menu01_base::menu_list("child",{"inner1"},&main_page,0);
+    Menu01 menu=Menu01(&main_page);
 
+    CHECK(menu.GetListItem(0)==std::string("item1"));
+    CHECK(menu.GetListItem(1)==std::string("second item"));
+    CHECK(menu.GetListItem(2)==std::string("3rd"));
 
-//TODO clean namespace!!!
+    CHECK(menu.GetMenuLength()==3);
+
+    menu.GoIn();
+    CHECK(menu.GetMenuLength()==1);
+}
+
+TEST_CASE( "If has parent list can return pointer to it")
+{
+    Menu01_base::menu_list main_page=Menu01_base::menu_list("main page",{"item1","second item"});
+    Menu01_base::menu_list subpage=Menu01_base::menu_list("child",{"inner1","inner2", "inner3"},&main_page,1);
+    Menu01_base::menu_list subsubpage=Menu01_base::menu_list("subchild",{"1","2", "3"},&subpage,0);
+    Menu01 menu=Menu01(&main_page);
+
+    menu.MoveDown();
+
+    CHECK(menu.HasParent() == false);
+    auto ret=menu.GoIn();
+    CHECK(menu.HasParent() == true);
+
+    CHECK(menu.GetParent()->Get_item(0) == std::string("item1"));
+    CHECK(menu.GetParent()->Get_item(1) == std::string("second item"));
+
+    menu.GoIn();
+    CHECK(menu.HasParent() == true);
+
+    CHECK(menu.GetParent()->Get_item(0) == std::string("inner1"));
+    CHECK(menu.GetParent()->Get_item(1) == std::string("inner2"));
+    CHECK(menu.GetParent()->Get_item(2) == std::string("inner3"));
+}
+
